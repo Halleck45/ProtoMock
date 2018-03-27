@@ -1,6 +1,10 @@
 ProtoMock
 =====
 
+[![License](https://poser.pugx.org/protomock/protomock/license.svg)](https://packagist.org/packages/protomock/protomock)
+[![Build Status](https://secure.travis-ci.org/Halleck45/ProtoMock.svg)](http://travis-ci.org/Halleck45/ProtoMock)
+
+
 Allow to mock your requests.
 
 ```php
@@ -29,6 +33,12 @@ Because legacy code exists, and generally needs unit tests...
 
 Usage
 -----
+
+**Installation**
+
+```bash
+composer require protomock/protomock
+```
 
 **Enabling / disabling mocking for given protocol**
 
