@@ -9,12 +9,12 @@ $mock->enable('file');
 $mock->enable('http');
 
 $mock
-    ->with('http://my-website.fr')
+    ->with('http://my-website.fr/hello')
     ->will('I am a mocked response');
 
 // ...
 
-echo file_get_contents('http://my-website.fr');
+echo file_get_contents('http://my-website.fr/hello');
 // I am a mocked response
 ```
 
@@ -43,8 +43,20 @@ $mock->disable('http');
 ```php
 $mock->with(<path>)->will('wanted response');
 // diabling
-$mock->without(<path>)
+$mocked = $mock->with(<path>)->will('wanted response');
+$mock->without($mocked)
 ```
+
+**Mocking a matching resource**
+
+```php
+$mock->matching(<regex>)->will('wanted response');
+
+// example
+$mock->matching('!.*\.txt!')->will('wanted response');
+```
+
+
 
 FAQ
 -----

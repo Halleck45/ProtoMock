@@ -20,9 +20,9 @@ class ProtoMock
     protected $handler;
 
     /**
-     * @var array
+     * @var Mocks
      */
-    protected static $mockedResponses = [];
+    protected static $mocks;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class ProtoMock
     public function disable($protocol)
     {
         $k = array_search($protocol, static::$protocols);
-        if(false === $k) {
+        if (false === $k) {
             return $this;
         }
 
@@ -61,8 +61,9 @@ class ProtoMock
     /**
      * @return $this
      */
-    protected function restoreDefaults() {
-        foreach(static::$protocols as $protocol) {
+    protected function restoreDefaults()
+    {
+        foreach (static::$protocols as $protocol) {
             stream_wrapper_unregister($protocol);
             stream_wrapper_restore($protocol);
         }
@@ -72,8 +73,9 @@ class ProtoMock
     /**
      * @return $this
      */
-    protected function restoreCustoms() {
-        foreach(static::$protocols as $protocol) {
+    protected function restoreCustoms()
+    {
+        foreach (static::$protocols as $protocol) {
             stream_wrapper_unregister($protocol);
             stream_wrapper_register($protocol, static::class);
         }
@@ -81,24 +83,55 @@ class ProtoMock
     }
 
     /**
-     * @param $url
-     * @return mixed
+     * @return $this
      */
-    public function with($url)
+    public function reset()
     {
-        static::$mockedResponses[$url] = new Mock($url);
-        return static::$mockedResponses[$url];
+        static::$mocks = new Mocks;
+        $this->restoreDefaults();
+        return $this;
     }
 
     /**
      * @param $url
+     * @return Mock
+     */
+    public function with($url)
+    {
+        if (!static::$mocks) {
+            static::$mocks = new Mocks;
+        }
+
+        $mock = new Mock($url);
+        static::$mocks->attach($mock);
+        return $mock;
+    }
+
+    /**
+     * @param $regex
+     * @return Mock
+     */
+    public function matching($regex)
+    {
+        if (!static::$mocks) {
+            static::$mocks = new Mocks;
+        }
+        $mock = new Mock($regex, Mock::MATCHING_REGEX);
+        static::$mocks->attach($mock);
+        return $mock;
+    }
+
+    /**
+     * @param Mock $mock
      * @return $this
      */
-    public function without($url)
+    public function without(Mock $mock)
     {
-        if(isset(static::$mockedResponses[$url])) {
-            unset(static::$mockedResponses[$url]);
+        if (!static::$mocks) {
+            static::$mocks = new Mocks;
         }
+
+        static::$mocks->detach($mock);
         return $this;
     }
 
@@ -112,8 +145,11 @@ class ProtoMock
 
         $this->restoreDefaults();
 
-        if (isset(static::$mockedResponses[$path])) {
-            $content = static::$mockedResponses[$path]->getContent();
+        if (!static::$mocks) {
+            static::$mocks = new Mocks;
+        }
+        if (static::$mocks->supports($path)) {
+            $content = static::$mocks->get($path)->getContent();
             $this->tempFile = tempnam(sys_get_temp_dir(), 'mock');
             file_put_contents($this->tempFile, $content);
             $path = $this->tempFile;
@@ -162,6 +198,9 @@ class ProtoMock
         return fclose($this->handler);
     }
 
+    /**
+     * @return array
+     */
     public function url_stat()
     {
         return stat($this->handler);
