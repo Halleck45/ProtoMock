@@ -182,4 +182,24 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
         throw new \LogicException('Warning was expected');
     }
 
+
+    public function testMockCanFailDUeToDns()
+    {
+        $mock = new ProtoMock();
+        $mock->enable('file');
+        ini_set('default_socket_timeout', 0);
+        $mock->with('/myfile.txt')->willFailDueToDnsResolution();
+
+        try {
+            $content = file_get_contents('/myfile.txt');
+        }catch(\Throwable $e) {
+            $this->assertEquals('file_get_contents(): php_network_getaddresses: getaddrinfo failed: Name or service not known', $e->getMessage());
+            return;
+        }finally {
+            ini_restore('default_socket_timeout');
+        }
+
+        throw new \LogicException('Warning was expected');
+    }
+
 }

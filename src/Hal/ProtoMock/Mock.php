@@ -72,6 +72,21 @@ class Mock
     }
 
     /**
+     * @return $this
+     */
+    public function willFailDueToDnsResolution()
+    {
+        $this->expectedResponse = function($path) {
+            $timeout = ini_get('default_socket_timeout');
+            sleep($timeout);
+            $message = 'file_get_contents(): php_network_getaddresses: getaddrinfo failed: Name or service not known';
+            trigger_error($message, E_USER_WARNING);
+            return false;
+        };
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getContent()

@@ -30,10 +30,10 @@ Because legacy code exists, and generally needs unit tests...
 Usage
 -----
 
-**Enabling / disabling mocking on protocol**
+**Enabling / disabling mocking for given protocol**
 
 ```php
-$protomock->enable('http');
+$protomock->enable('http'); // will capture all http://... requests
 
 // disabling
 $protomock->disable('http');
@@ -42,7 +42,9 @@ $protomock->disable('http');
 **Mocking a resource**
 
 ```php
-$protomock->with(<path>)->will('wanted response');
+$protomock
+    ->with(<path>)
+    ->will('wanted response');
 
 // disabling
 $mocked = $protomock->with(<path>)->will('wanted response');
@@ -52,16 +54,22 @@ $protomock->without($mocked)
 **Mocking a resource by regex**
 
 ```php
-$protomock->matching(<regex>)->will('wanted response');
+$protomock
+    ->matching(<regex>)
+    ->will('wanted response');
 
 // example
-$protomock->matching('!.*\.txt!')->will('wanted response');
+$protomock
+    ->matching('!.*\.txt!')
+    ->will('wanted response');
 ```
 
 **Mocking a resource by patch (case insensitive)**
 
 ```php
-$protomock->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('wanted response');
+$protomock
+    ->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)
+    ->will('wanted response');
 ```
 
 
@@ -70,18 +78,31 @@ $protomock->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('wanted res
 ```php
 // you can use any callable
 
-$protomock->with('/my/file1.txt')->will(function($path) {
-    return 'I a a mock. Current path is ' . $path;
-});
+$protomock
+    ->with('/my/file1.txt')
+    ->will(function($path) {
+        return 'I a a mock. Current path is ' . $path;
+    });
 ```
 
 **Expecting a failure as response**
 
 ```php
 // will trigger a WARNING
-$protomock->with('/my/file1.txt')->willFail();
+$protomock
+    ->with('/my/file1.txt')
+    ->willFail();
 ```
 
+
+**Expecting a failure as response (due to DNS resolution) **
+
+```php
+// will trigger a WARNING and wait for default_socket_timeout delay
+$protomock
+    ->with('/my/file1.txt')
+    ->willFail();
+```
 
 **Cancelling all**
 
