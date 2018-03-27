@@ -59,6 +59,19 @@ class Mock
     }
 
     /**
+     * @return $this
+     */
+    public function willFail()
+    {
+        $this->expectedResponse = function($path) {
+            $message = sprintf('file_get_contents(%s): failed to open stream: No such file or directory', $path);
+            trigger_error($message, E_USER_WARNING);
+            return false;
+        };
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getContent()

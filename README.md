@@ -4,11 +4,11 @@ ProtoMock
 Allow to mock your requests.
 
 ```php
-$mock = new ProtoMock();
-$mock->enable('file');
-$mock->enable('http');
+$protomock = new ProtoMock();
+$protomock->enable('file');
+$protomock->enable('http');
 
-$mock
+$protomock
     ->with('http://my-website.fr/hello')
     ->will('I am a mocked response');
 
@@ -33,33 +33,35 @@ Usage
 **Enabling / disabling mocking on protocol**
 
 ```php
-$mock->enable('http');
+$protomock->enable('http');
+
 // disabling
-$mock->disable('http');
+$protomock->disable('http');
 ```
     
 **Mocking a resource**
 
 ```php
-$mock->with(<path>)->will('wanted response');
-// diabling
-$mocked = $mock->with(<path>)->will('wanted response');
-$mock->without($mocked)
+$protomock->with(<path>)->will('wanted response');
+
+// disabling
+$mocked = $protomock->with(<path>)->will('wanted response');
+$protomock->without($mocked)
 ```
 
 **Mocking a resource by regex**
 
 ```php
-$mock->matching(<regex>)->will('wanted response');
+$protomock->matching(<regex>)->will('wanted response');
 
 // example
-$mock->matching('!.*\.txt!')->will('wanted response');
+$protomock->matching('!.*\.txt!')->will('wanted response');
 ```
 
 **Mocking a resource by patch (case insensitive)**
 
 ```php
-$mock->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('wanted response');
+$protomock->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('wanted response');
 ```
 
 
@@ -68,17 +70,23 @@ $mock->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('wanted response
 ```php
 // you can use any callable
 
-$mock->with('/my/file1.txt')->will(function($path) {
+$protomock->with('/my/file1.txt')->will(function($path) {
     return 'I a a mock. Current path is ' . $path;
 });
 ```
 
+**Expecting a failure as response**
+
+```php
+// will trigger a WARNING
+$protomock->with('/my/file1.txt')->willFail();
+```
+
+
 **Cancelling all**
 
 ```php
-// you can use any callable
-
-$mock->reset();
+$protomock->reset();
 ```
 
 

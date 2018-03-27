@@ -152,4 +152,20 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('I am a mock from a callable with /myfile.txt', $content);
     }
 
+    public function testMockCanFail()
+    {
+        $mock = new ProtoMock();
+        $mock->enable('file');
+        $mock->with('/myfile.txt')->willFail();
+
+        try {
+            $content = file_get_contents('/myfile.txt');
+        }catch(\Throwable $e) {
+            $this->assertEquals('file_get_contents(/myfile.txt): failed to open stream: No such file or directory', $e->getMessage());
+            return;
+        }
+
+        throw new \LogicException('Warning was expected');
+    }
+
 }
