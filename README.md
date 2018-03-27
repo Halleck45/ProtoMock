@@ -105,7 +105,7 @@ $protomock
 ```
 
 
-**Expecting a failure as response (due to DNS resolution) **
+**Expecting a failure as response (due to DNS resolution)**
 
 ```php
 // will trigger a WARNING and wait for default_socket_timeout delay
