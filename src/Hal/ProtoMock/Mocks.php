@@ -9,7 +9,7 @@ namespace Hal\ProtoMock;
  * Class Mocks
  * @package Hal\ProtoMock
  */
-class Mocks implements \IteratorAggregate
+class Mocks
 {
 
     /**
@@ -17,17 +17,12 @@ class Mocks implements \IteratorAggregate
      */
     protected $mocks;
 
+    /**
+     * Mocks constructor.
+     */
     public function __construct()
     {
         $this->mocks = new \SplObjectStorage();
-    }
-
-    /**
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->mocks);
     }
 
     /**
@@ -77,14 +72,4 @@ class Mocks implements \IteratorAggregate
         }
         return false;
     }
-
-    /**
-     * @param $regex
-     * @return Mock
-     */
-    public function matching($regex)
-    {
-        return new Mock($regex);
-    }
-
 }

@@ -139,6 +139,20 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('I am a mock from regex', $content);
     }
 
+    /**
+     * @group wip
+     */
+    public function testICanMockInsensitive()
+    {
+        $mock = new ProtoMock();
+        $mock->enable('file');
+
+        $mock->with('/file1.txt', Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('I am a mock from mock');
+
+        $content = file_get_contents('/FILE1.txt');
+        $this->assertEquals('I am a mock from mock', $content);
+    }
+
     public function testICanUseCallableInOrderToBuildResponse()
     {
         $mock = new ProtoMock();
