@@ -18,14 +18,14 @@ echo file_get_contents('http://my-website.fr');
 // I am a mocked response
 ```
 
-That's only a POC for the moment. Feel free to contribute if you are interested.
+**That's only a POC**. Feel free to contribute if you are interested.
 
 Why ?
 -----
 
-Because legacy code exists...
+Because legacy code exists, and generally needs unit tests...
 
-(and also because my train is late, and I have one hour to kill...)
+(and because my train is late (yes, I'm french), and I have one hour to kill...)
 
 Usage
 -----
@@ -46,10 +46,22 @@ $mock->with(<path>)->will('wanted response');
 $mock->without(<path>)
 ```
 
+FAQ
+-----
+
+_ *"That's look magic ! This project must be so complex !"*
+
+**nope**. It needs only 200 lines of code, including comments... I just use the `stream_wrapper_register` PHP function.
+
+_ *"Can I use it for my unit tests?"*
+
+**I don't know**. That's just a poc, but why not ?
+ 
+
 Requirements
 -----
 
-PHP >= 7
+- `PHP >= 7`
 
 License
 -----
