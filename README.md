@@ -56,6 +56,13 @@ $mock->matching(<regex>)->will('wanted response');
 $mock->matching('!.*\.txt!')->will('wanted response');
 ```
 
+**Mocking a resource by patch (case insensitive)**
+
+```php
+$mock->with($path, Mock::MATCHING_EXACT_CASE_INSENSITIVE)->will('wanted response');
+```
+
+
 **Using a function for response**
 
 ```php

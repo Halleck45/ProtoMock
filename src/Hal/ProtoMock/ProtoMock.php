@@ -95,11 +95,12 @@ class ProtoMock
 
     /**
      * @param $url
+     * @param int $mode
      * @return Mock
      */
-    public function with($url)
+    public function with($url, $mode = Mock::MATCHING_EXACT)
     {
-        $mock = new Mock($url);
+        $mock = new Mock($url, $mode);
         static::$mocks->attach($mock);
         return $mock;
     }
@@ -110,9 +111,7 @@ class ProtoMock
      */
     public function matching($regex)
     {
-        $mock = new Mock($regex, Mock::MATCHING_REGEX);
-        static::$mocks->attach($mock);
-        return $mock;
+        return $this->with($regex, Mock::MATCHING_REGEX);
     }
 
     /**
