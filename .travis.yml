@@ -1,0 +1,11 @@
+language: php
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+before_script:
+  - wget http://getcomposer.org/composer.phar
+  - php composer.phar install --dev --prefer-dist
+
+script:
+  - ./vendor/bin/phpunit -c phpunit.xml.dist
