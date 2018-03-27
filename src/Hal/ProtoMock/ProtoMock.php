@@ -37,6 +37,7 @@ class ProtoMock
     public function enable($protocol)
     {
         static::$protocols[] = $protocol;
+        static::$mocks = new Mocks;
         stream_wrapper_unregister($protocol);
         stream_wrapper_register($protocol, static::class);
         return $this;
@@ -98,10 +99,6 @@ class ProtoMock
      */
     public function with($url)
     {
-        if (!static::$mocks) {
-            static::$mocks = new Mocks;
-        }
-
         $mock = new Mock($url);
         static::$mocks->attach($mock);
         return $mock;
@@ -113,9 +110,6 @@ class ProtoMock
      */
     public function matching($regex)
     {
-        if (!static::$mocks) {
-            static::$mocks = new Mocks;
-        }
         $mock = new Mock($regex, Mock::MATCHING_REGEX);
         static::$mocks->attach($mock);
         return $mock;
@@ -127,10 +121,6 @@ class ProtoMock
      */
     public function without(Mock $mock)
     {
-        if (!static::$mocks) {
-            static::$mocks = new Mocks;
-        }
-
         static::$mocks->detach($mock);
         return $this;
     }
@@ -145,9 +135,6 @@ class ProtoMock
 
         $this->restoreDefaults();
 
-        if (!static::$mocks) {
-            static::$mocks = new Mocks;
-        }
         if (static::$mocks->supports($path)) {
             $content = static::$mocks->get($path)->getContent();
             $this->tempFile = tempnam(sys_get_temp_dir(), 'mock');
