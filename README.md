@@ -47,7 +47,7 @@ $mocked = $mock->with(<path>)->will('wanted response');
 $mock->without($mocked)
 ```
 
-**Mocking a matching resource**
+**Mocking a resource by regex**
 
 ```php
 $mock->matching(<regex>)->will('wanted response');
@@ -56,6 +56,23 @@ $mock->matching(<regex>)->will('wanted response');
 $mock->matching('!.*\.txt!')->will('wanted response');
 ```
 
+**Using a function for response**
+
+```php
+// you can use any callable
+
+$mock->with('/my/file1.txt')->will(function($path) {
+    return 'I a a mock. Current path is ' . $path;
+});
+```
+
+**Cancelling all**
+
+```php
+// you can use any callable
+
+$mock->reset();
+```
 
 
 FAQ

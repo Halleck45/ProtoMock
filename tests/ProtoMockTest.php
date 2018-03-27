@@ -137,8 +137,19 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
 
         $content = file_get_contents('/nice/example.txt');
         $this->assertEquals('I am a mock from regex', $content);
-
     }
 
+    public function testICanUseCallableInOrderToBuildResponse()
+    {
+        $mock = new ProtoMock();
+        $mock->enable('file');
+
+        $mock->with('/myfile.txt')->will(function($path) {
+            return 'I am a mock from a callable with ' . $path;
+        });
+
+        $content = file_get_contents('/myfile.txt');
+        $this->assertEquals('I am a mock from a callable with /myfile.txt', $content);
+    }
 
 }

@@ -63,6 +63,9 @@ class Mock
      */
     public function getContent()
     {
+        if(is_callable($this->expectedResponse)) {
+            return call_user_func($this->expectedResponse, $this->path);
+        }
         return $this->expectedResponse;
     }
 
