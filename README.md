@@ -74,7 +74,7 @@ $protomock
     ->will('wanted response');
 ```
 
-**Mocking a resource by patch (case insensitive)**
+**Mocking a resource by path (case insensitive)**
 
 ```php
 $protomock
