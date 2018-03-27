@@ -4,10 +4,6 @@ namespace Tests;
 use Hal\ProtoMock\Mock;
 use Hal\ProtoMock\ProtoMock;
 
-require_once __DIR__ . '/../src/Hal/ProtoMock/Mock.php';
-require_once __DIR__ . '/../src/Hal/ProtoMock/Mocks.php';
-require_once __DIR__ . '/../src/Hal/ProtoMock/ProtoMock.php';
-
 class ProtoMockTest extends \PHPUnit_Framework_TestCase {
 
     public function tearDown()

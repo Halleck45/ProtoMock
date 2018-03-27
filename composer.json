@@ -20,8 +20,8 @@
     "issues": "https://github.com/Halleck45/ProtoMock/issues"
   },
   "autoload": {
-    "psr-0": {
-      "Hal\\": "./src/"
+    "psr-4": {
+      "Hal\\ProtoMock\\": "./src/"
     }
   },
   "require-dev": {
