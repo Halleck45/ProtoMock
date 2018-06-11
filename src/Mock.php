@@ -63,7 +63,7 @@ class Mock
      */
     public function willFail()
     {
-        $this->expectedResponse = function($path) {
+        $this->expectedResponse = function ($path) {
             $message = sprintf('file_get_contents(%s): failed to open stream: No such file or directory', $path);
             trigger_error($message, E_USER_WARNING);
             return false;
@@ -76,7 +76,7 @@ class Mock
      */
     public function willFailDueToDnsResolution()
     {
-        $this->expectedResponse = function($path) {
+        $this->expectedResponse = function ($path) {
             $timeout = ini_get('default_socket_timeout');
             sleep($timeout);
             $message = 'file_get_contents(): php_network_getaddresses: getaddrinfo failed: Name or service not known';
@@ -91,7 +91,7 @@ class Mock
      */
     public function getContent()
     {
-        if(is_callable($this->expectedResponse)) {
+        if (is_callable($this->expectedResponse)) {
             return call_user_func($this->expectedResponse, $this->path);
         }
         return $this->expectedResponse;
