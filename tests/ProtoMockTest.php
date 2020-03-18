@@ -4,7 +4,8 @@ namespace Tests;
 use Hal\ProtoMock\Mock;
 use Hal\ProtoMock\ProtoMock;
 
-class ProtoMockTest extends \PHPUnit_Framework_TestCase {
+class ProtoMockTest extends \PHPUnit_Framework_TestCase
+{
 
     public function tearDown()
     {
@@ -67,7 +68,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
         $content = file_get_contents($filename);
         $this->assertEquals('I am a mock', $content);
 
-        $mock->without($mocked  );
+        $mock->without($mocked);
         $content = file_get_contents($filename);
 
         $this->assertEquals('I am the original string', $content);
@@ -154,7 +155,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
         $mock = new ProtoMock();
         $mock->enable('file');
 
-        $mock->with('/myfile.txt')->will(function($path) {
+        $mock->with('/myfile.txt')->will(function ($path) {
             return 'I am a mock from a callable with ' . $path;
         });
 
@@ -170,7 +171,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
 
         try {
             $content = file_get_contents('/myfile.txt');
-        }catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             $this->assertEquals('file_get_contents(/myfile.txt): failed to open stream: No such file or directory', $e->getMessage());
             return;
         }
@@ -188,7 +189,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
 
         try {
             $content = file_get_contents('/myfile.txt');
-        }catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             $this->assertEquals('file_get_contents(): php_network_getaddresses: getaddrinfo failed: Name or service not known', $e->getMessage());
             return;
         }finally {
@@ -197,5 +198,4 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase {
 
         throw new \LogicException('Warning was expected');
     }
-
 }

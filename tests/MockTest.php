@@ -4,7 +4,8 @@ namespace Tests;
 use Hal\ProtoMock\Mock;
 use Hal\ProtoMock\ProtoMock;
 
-class MockTest extends \PHPUnit_Framework_TestCase {
+class MockTest extends \PHPUnit_Framework_TestCase
+{
 
     public function testMockIsAccessible()
     {
@@ -12,5 +13,4 @@ class MockTest extends \PHPUnit_Framework_TestCase {
         $mocked->will('my');
         $this->assertEquals('my', $mocked->getContent());
     }
-
 }
