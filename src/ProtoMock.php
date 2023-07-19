@@ -127,7 +127,7 @@ class ProtoMock
     /**
      * @param $path
      * @param string $mode
-     * @return resource
+     * @return bool
      */
     public function stream_open($path, $mode = 'r')
     {
@@ -135,7 +135,6 @@ class ProtoMock
         $this->restoreDefaults();
 
         if (static::$mocks->supports($path)) {
-            $content = static::$mocks->get($path)->getContent();
             $content = static::$mocks->get($path)->getContent();
             if (false === $content) {
                 $this->restoreCustoms();
@@ -181,12 +180,13 @@ class ProtoMock
      */
     public function stream_close()
     {
+        $result = fclose($this->handler);
         if ($this->tempFile) {
             $this->restoreDefaults();
             unlink($this->tempFile);
             $this->restoreCustoms();
         }
-        return fclose($this->handler);
+        return $result;
     }
 
     /**
