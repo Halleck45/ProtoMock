@@ -136,6 +136,11 @@ class ProtoMock
 
         if (static::$mocks->supports($path)) {
             $content = static::$mocks->get($path)->getContent();
+            $content = static::$mocks->get($path)->getContent();
+            if (false === $content) {
+                $this->restoreCustoms();
+                return false;
+            }
             $this->tempFile = tempnam(sys_get_temp_dir(), 'mock');
             file_put_contents($this->tempFile, $content);
             $path = $this->tempFile;
@@ -143,7 +148,7 @@ class ProtoMock
 
         $this->handler = fopen($path, $mode);
         $this->restoreCustoms();
-        return $this->handler;
+        return true;
     }
 
     /**
