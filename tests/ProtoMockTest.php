@@ -9,6 +9,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        restore_error_handler();
         (new ProtoMock())->reset();
     }
 
@@ -180,7 +181,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testMockCanFailDUeToDns()
+    public function testMockCanFailDueToDns()
     {
         $mock = new ProtoMock();
         $mock->enable('file');
@@ -197,5 +198,23 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
         }
 
         throw new \LogicException('Warning was expected');
+    }
+
+    public function testFailingMockShouldReturnFalse()
+    {
+        $mock = new ProtoMock();
+        $mock->enable('file');
+        $mock->with('/myfile.txt')->willFail();
+
+        set_error_handler(static function ($errno, $errstr) {
+            $expectedWarnings = [
+                'file_get_contents(/myfile.txt): failed to open stream: No such file or directory',
+                'file_get_contents(/myfile.txt): failed to open stream: "Hal\ProtoMock\ProtoMock::stream_open" call failed',
+            ];
+            return in_array($errstr, $expectedWarnings);
+        }, E_WARNING | E_USER_WARNING);
+
+        $content = file_get_contents('/myfile.txt');
+        $this->assertFalse($content);
     }
 }
