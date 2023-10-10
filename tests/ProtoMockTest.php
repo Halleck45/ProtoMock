@@ -217,4 +217,49 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
         $content = file_get_contents('/myfile.txt');
         $this->assertFalse($content);
     }
+
+    public function testMockShouldReceiveStreamContext()
+    {
+        $actualContext = null;
+
+        $mock = new ProtoMock();
+        $mock->enable('https')
+            ->with('https://my-test.org/')
+            ->will(function ($path, $context) use (&$actualContext) {
+                $actualContext = $context;
+                return 'All clear!';
+            });
+
+        $context = [
+            'http' => [
+                'method' => 'GET',
+                'header' => 'Content-type: application/x-www-form-urlencoded',
+                'content' => http_build_query(['foo' => 'bar']),
+            ],
+        ];
+        $expectedContext = $context;
+        $content = file_get_contents('https://my-test.org/', false, stream_context_create($context));
+        $this->assertSame('All clear!', $content);
+        $this->assertNotEmpty($actualContext);
+        $this->assertInternalType('resource', $actualContext);
+        $this->assertEquals($expectedContext, stream_context_get_options($actualContext));
+    }
+
+    public function testMockShouldReceiveEmptyStreamContextWhenNoneIsPassed()
+    {
+        $actualContext = null;
+
+        $mock = new ProtoMock();
+        $mock->enable('https')
+            ->with('https://my-test.org/')
+            ->will(function ($path, $context) use (&$actualContext) {
+                $actualContext = $context;
+                return 'All clear!';
+            });
+
+        $content = file_get_contents('https://my-test.org/');
+        $this->assertSame('All clear!', $content);
+        $this->assertInternalType('resource', $actualContext);
+        $this->assertEmpty(stream_context_get_options($actualContext));
+    }
 }
