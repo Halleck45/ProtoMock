@@ -8,9 +8,8 @@ namespace Hal\ProtoMock;
  */
 class ProtoMock
 {
-
     /**
-     * @var array
+     * @var string[]
      */
     protected static $protocols = [];
 
@@ -29,9 +28,13 @@ class ProtoMock
      */
     protected $tempFile;
 
+    /**
+     * @var resource|null
+     */
+    public $context;
 
     /**
-     * @param $protocol
+     * @param string $protocol
      * @return $this
      */
     public function enable($protocol)
@@ -44,6 +47,7 @@ class ProtoMock
     }
 
     /**
+     * @param string $protocol
      * @return $this
      */
     public function disable($protocol)
@@ -131,11 +135,10 @@ class ProtoMock
      */
     public function stream_open($path, $mode = 'r')
     {
-
         $this->restoreDefaults();
 
         if (static::$mocks->supports($path)) {
-            $content = static::$mocks->get($path)->getContent();
+            $content = static::$mocks->get($path)->getContent($this->context);
             if (false === $content) {
                 $this->restoreCustoms();
                 return false;
@@ -167,7 +170,7 @@ class ProtoMock
     }
 
     /**
-     * @param $length
+     * @param int $length
      * @return string
      */
     public function stream_read($length)
