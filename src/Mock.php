@@ -87,12 +87,13 @@ class Mock
     }
 
     /**
+     * @param resource|null $context
      * @return mixed
      */
-    public function getContent()
+    public function getContent($context = null)
     {
         if (is_callable($this->expectedResponse)) {
-            return call_user_func($this->expectedResponse, $this->path);
+            return call_user_func($this->expectedResponse, $this->path, $context);
         }
         return $this->expectedResponse;
     }
