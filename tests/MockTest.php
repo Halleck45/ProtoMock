@@ -2,8 +2,9 @@
 namespace Tests;
 
 use Hal\ProtoMock\Mock;
+use PHPUnit\Framework\TestCase;
 
-class MockTest extends \PHPUnit_Framework_TestCase
+class MockTest extends TestCase
 {
     public function testMockIsAccessible()
     {

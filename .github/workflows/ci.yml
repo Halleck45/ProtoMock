@@ -1,0 +1,21 @@
+name: ProtoMock CI
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions:
+          ["7.1", "7.2", "7.3", "7.4", "8.0", "8.1", "8.2", "8.3"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - name: Install dependencies
+        run: composer install
+      - name: Run tests
+        run: vendor/bin/phpunit -c phpunit.xml.dist

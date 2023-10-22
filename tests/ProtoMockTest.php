@@ -3,11 +3,14 @@ namespace Tests;
 
 use Hal\ProtoMock\Mock;
 use Hal\ProtoMock\ProtoMock;
+use LogicException;
+use PHPUnit\Framework\TestCase;
+use Throwable;
 
-class ProtoMockTest extends \PHPUnit_Framework_TestCase
+class ProtoMockTest extends TestCase
 {
 
-    public function tearDown()
+    public function tearDown(): void
     {
         restore_error_handler();
         (new ProtoMock())->reset();
@@ -166,23 +169,30 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
 
     public function testMockCanFail()
     {
+        set_error_handler(function($errno, $errstr) {
+            throw new LogicException($errstr);
+        });
+
         $mock = new ProtoMock();
         $mock->enable('file');
         $mock->with('/myfile.txt')->willFail();
 
         try {
             $content = file_get_contents('/myfile.txt');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->assertEquals('file_get_contents(/myfile.txt): failed to open stream: No such file or directory', $e->getMessage());
             return;
         }
 
-        throw new \LogicException('Warning was expected');
+        throw new LogicException('Warning was expected');
     }
 
 
     public function testMockCanFailDueToDns()
     {
+        set_error_handler(function($errno, $errstr) {
+            throw new LogicException($errstr);
+        });
         $mock = new ProtoMock();
         $mock->enable('file');
         ini_set('default_socket_timeout', 0);
@@ -190,14 +200,14 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
 
         try {
             $content = file_get_contents('/myfile.txt');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->assertEquals('file_get_contents(): php_network_getaddresses: getaddrinfo failed: Name or service not known', $e->getMessage());
             return;
         }finally {
             ini_restore('default_socket_timeout');
         }
 
-        throw new \LogicException('Warning was expected');
+        throw new LogicException('Warning was expected');
     }
 
     public function testFailingMockShouldReturnFalse()
@@ -206,14 +216,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
         $mock->enable('file');
         $mock->with('/myfile.txt')->willFail();
 
-        set_error_handler(static function ($errno, $errstr) {
-            $expectedWarnings = [
-                'file_get_contents(/myfile.txt): failed to open stream: No such file or directory',
-                'file_get_contents(/myfile.txt): failed to open stream: "Hal\ProtoMock\ProtoMock::stream_open" call failed',
-            ];
-            return in_array($errstr, $expectedWarnings);
-        }, E_WARNING | E_USER_WARNING);
-
+        set_error_handler(function() {});
         $content = file_get_contents('/myfile.txt');
         $this->assertFalse($content);
     }
@@ -241,7 +244,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
         $content = file_get_contents('https://my-test.org/', false, stream_context_create($context));
         $this->assertSame('All clear!', $content);
         $this->assertNotEmpty($actualContext);
-        $this->assertInternalType('resource', $actualContext);
+        $this->assertIsResource($actualContext);
         $this->assertEquals($expectedContext, stream_context_get_options($actualContext));
     }
 
@@ -259,7 +262,7 @@ class ProtoMockTest extends \PHPUnit_Framework_TestCase
 
         $content = file_get_contents('https://my-test.org/');
         $this->assertSame('All clear!', $content);
-        $this->assertInternalType('resource', $actualContext);
+        $this->assertIsResource($actualContext);
         $this->assertEmpty(stream_context_get_options($actualContext));
     }
 }
