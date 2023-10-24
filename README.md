@@ -1,9 +1,8 @@
 ProtoMock
 =====
 
-[![License](https://poser.pugx.org/protomock/protomock/license.svg)](https://packagist.org/packages/protomock/protomock)
-[![Build Status](https://secure.travis-ci.org/Halleck45/ProtoMock.svg)](http://travis-ci.org/Halleck45/ProtoMock)
-
+![License](https://poser.pugx.org/protomock/protomock/license.svg)
+![Build Status](https://github.com/Halleck45/ProtoMock/actions/workflows/ci.yml/badge.svg)
 
 Allow to mock your requests.
 
