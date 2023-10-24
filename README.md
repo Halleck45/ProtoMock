@@ -21,8 +21,6 @@ echo file_get_contents('http://my-website.fr/hello');
 // I am a mocked response
 ```
 
-**That's only a POC**. Feel free to contribute if you are interested.
-
 Why ?
 -----
 
