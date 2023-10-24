@@ -199,4 +199,9 @@ class ProtoMock
     {
         return stat($this->handler);
     }
+
+    public function stream_set_option($option, $arg1, $arg2)
+    {
+        return false;
+    }
 }
