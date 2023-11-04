@@ -127,7 +127,7 @@ _ *"That's look magic ! This project must be so complex !"*
 
 _ *"Can I use it for my unit tests?"*
 
-**I don't know**. That's just a poc, but why not ?
+**Yes**. ProtoMock is used by several companies for the Continuous Integration (CI) of their projects.
  
 
 Requirements
